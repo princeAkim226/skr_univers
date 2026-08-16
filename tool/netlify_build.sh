@@ -7,11 +7,22 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-TARGET="$(echo "${SITE_TARGET:-app}" | tr '[:upper:]' '[:lower:]')"
+RAW_TARGET="$(printf '%s' "${SITE_TARGET:-}" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')"
+SITE_NAME="$(printf '%s' "${NETLIFY_SITE_NAME:-}" | tr '[:upper:]' '[:lower:]')"
+
+if [ "$RAW_TARGET" = "admin" ] || [ "$RAW_TARGET" = "administration" ] || [[ "$SITE_NAME" == *admin* ]]; then
+  TARGET="admin"
+else
+  TARGET="app"
+fi
+
 PUBLISH_DIR="build/web_deploy"
 FLUTTER_DIR="${FLUTTER_ROOT:-$ROOT/.flutter-sdk}"
 
-echo "=== B-Place Netlify build (SITE_TARGET=$TARGET) ==="
+echo "=== B-Place Netlify build ==="
+echo "SITE_TARGET brut : '${SITE_TARGET:-<vide>}'"
+echo "NETLIFY_SITE_NAME : '${NETLIFY_SITE_NAME:-<vide>}'"
+echo "Plateforme        : $TARGET"
 
 if [ ! -x "$FLUTTER_DIR/bin/flutter" ]; then
   echo "Installation de Flutter (stable)..."

@@ -1,19 +1,16 @@
 # Deux sites Netlify, un seul dépôt GitHub.
+# SITE_TARGET n'est PAS défini ici : sinon Netlify ignore la variable
+# du tableau de bord et reconstruit toujours l'app.
 #
-# 1) Site APP (duplicata web de l'app)
-#    Import GitHub → ce repo. Rien à changer (SITE_TARGET=app par défaut).
-#
-# 2) Site ADMIN (panneau d'administration)
-#    Import GitHub → le MÊME repo.
-#    Site configuration → Environment variables :
-#      SITE_TARGET = admin
+# Site APP   : aucun réglage (défaut = app)
+# Site ADMIN : Environment variables → SITE_TARGET = admin
+#              puis Deploys → Trigger deploy → Deploy site
 
 [build]
   command = "bash tool/netlify_build.sh"
   publish = "build/web_deploy"
 
 [build.environment]
-  SITE_TARGET = "app"
   FLUTTER_GIT_URL = "https://github.com/flutter/flutter.git"
 
 [[redirects]]
