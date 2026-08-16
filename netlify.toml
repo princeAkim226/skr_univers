@@ -16,11 +16,6 @@
   SITE_TARGET = "app"
   FLUTTER_GIT_URL = "https://github.com/flutter/flutter.git"
 
-[[plugins]]
-  package = "netlify-plugin-cache"
-  [plugins.inputs]
-    paths = [".flutter-sdk"]
-
 [[redirects]]
   from = "/*"
   to = "/index.html"
