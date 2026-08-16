@@ -82,7 +82,7 @@ class _IdCardUploadWidgetState extends State<IdCardUploadWidget> {
         _showSuccessSnackBar('Image sélectionnée avec succès');
       }
     } catch (e) {
-      _showErrorSnackBar('Erreur lors de la sélection: $e');
+      _showErrorSnackBar('Impossible de sélectionner l’image. Réessayez.');
     } finally {
       setState(() {
         _isUploading = false;

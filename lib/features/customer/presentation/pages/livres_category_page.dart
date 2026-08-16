@@ -3,6 +3,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/number_utils.dart';
 import '../../../../data/services/product_service.dart';
 import '../widgets/product_card.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class LivresCategoryPage extends StatefulWidget {
   const LivresCategoryPage({super.key});
@@ -48,12 +49,7 @@ class _LivresCategoryPageState extends State<LivresCategoryPage> {
     } catch (e) {
       setState(() => _loading = false);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Impossible de charger les livres: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ErrorHandler.showError(context, e);
     }
   }
 

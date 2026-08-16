@@ -3,6 +3,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/number_utils.dart';
 import '../../../../data/services/product_service.dart';
 import '../widgets/product_card.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class DivertissementCategoryPage extends StatefulWidget {
   const DivertissementCategoryPage({super.key});
@@ -44,12 +45,7 @@ class _DivertissementCategoryPageState extends State<DivertissementCategoryPage>
     } catch (e) {
       setState(() => _loading = false);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Impossible de charger Divertissement: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ErrorHandler.showError(context, e);
     }
   }
 

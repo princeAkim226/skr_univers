@@ -147,7 +147,7 @@ class _MerchantSignupPageState extends State<MerchantSignupPage> {
         } else if (e.toString().contains('422')) {
           errorMessage = 'Numéro de téléphone déjà utilisé. Veuillez vous connecter ou utiliser un autre numéro.';
         } else {
-          errorMessage = 'Erreur d\'inscription: $e';
+          errorMessage = 'Impossible de créer le compte. Vérifiez vos informations et réessayez.';
         }
         
         _showErrorSnackBar(errorMessage);

@@ -5,6 +5,7 @@ import '../../../../core/widgets/styled_app_bar.dart';
 import '../../../../data/services/favorites_service.dart';
 import '../../../../data/services/product_service.dart';
 import '../../../../data/services/image_service.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
@@ -49,9 +50,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur: $e')),
-      );
+      ErrorHandler.showError(context, e);
     }
   }
 

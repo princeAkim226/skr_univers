@@ -73,7 +73,7 @@ class StoryService {
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
       print('Erreur lors de la récupération des stories: $e');
-      throw Exception('Impossible de récupérer les stories: $e');
+      throw Exception('Impossible de récupérer les stories.');
     }
   }
 
@@ -91,7 +91,7 @@ class StoryService {
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
       print('Erreur lors de la récupération des stories du marchand: $e');
-      throw Exception('Impossible de récupérer les stories de ce marchand: $e');
+      throw Exception('Impossible de récupérer les stories de ce marchand.');
     }
   }
 
@@ -114,7 +114,7 @@ class StoryService {
           .eq('id', storyId);
     } catch (e) {
       print('Erreur lors de la suppression de la story: $e');
-      throw Exception('Impossible de supprimer cette story: $e');
+      throw Exception('Impossible de supprimer cette story.');
     }
   }
 
@@ -144,7 +144,7 @@ class StoryService {
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
       print('Erreur lors de la récupération de mes stories: $e');
-      throw Exception('Impossible de récupérer vos stories: $e');
+      throw Exception('Impossible de récupérer vos stories.');
     }
   }
 
@@ -197,7 +197,7 @@ class StoryService {
       return response;
     } catch (e) {
       print('Erreur lors de la republication de la story: $e');
-      throw Exception('Impossible de republier cette story: $e');
+      throw Exception('Impossible de republier cette story.');
     }
   }
 }

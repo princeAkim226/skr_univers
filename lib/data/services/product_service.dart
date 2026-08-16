@@ -115,7 +115,7 @@ class ProductService {
       return products;
     } catch (e) {
       print('Erreur lors de la récupération des produits: $e');
-      throw Exception('Impossible de récupérer les produits: $e');
+      throw Exception('Impossible de récupérer les produits.');
     }
   }
 
@@ -135,7 +135,7 @@ class ProductService {
       return products;
     } catch (e) {
       print('Erreur lors de la récupération des produits récents: $e');
-      throw Exception('Impossible de récupérer les produits récents: $e');
+      throw Exception('Impossible de récupérer les produits récents.');
     }
   }
 
@@ -216,7 +216,7 @@ class ProductService {
       print('❌ Erreur lors de la récupération des produits par catégorie: $e');
       print('📚 Stack trace: $stackTrace');
       print('🔍 Détails de l\'erreur: ${e.toString()}');
-      throw Exception('Impossible de récupérer les produits de cette catégorie: $e');
+      throw Exception('Impossible de récupérer les produits de cette catégorie.');
     }
   }
 
@@ -233,7 +233,7 @@ class ProductService {
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
       print('Erreur lors de la récupération des produits du e-commerçant: $e');
-      throw Exception('Impossible de récupérer les produits de ce e-commerçant: $e');
+      throw Exception('Impossible de récupérer les produits de ce e-commerçant.');
     }
   }
 
@@ -264,7 +264,7 @@ class ProductService {
       return List<Map<String, dynamic>>.from(response);
     } catch (e) {
       print('Erreur lors de la récupération de mes produits: $e');
-      throw Exception('Impossible de récupérer vos produits: $e');
+      throw Exception('Impossible de récupérer vos produits.');
     }
   }
 
@@ -293,7 +293,7 @@ class ProductService {
       return products;
     } catch (e) {
       print('Erreur lors de la récupération des produits proches: $e');
-      throw Exception('Impossible de récupérer les produits proches: $e');
+      throw Exception('Impossible de récupérer les produits proches.');
     }
   }
 
@@ -309,7 +309,7 @@ class ProductService {
       return response;
     } catch (e) {
       print('Erreur lors de la récupération du produit: $e');
-      throw Exception('Impossible de récupérer ce produit: $e');
+      throw Exception('Impossible de récupérer ce produit.');
     }
   }
 
@@ -363,7 +363,7 @@ class ProductService {
       return products;
     } catch (e) {
       print('Erreur lors de la recherche: $e');
-      throw Exception('Impossible de rechercher les produits: $e');
+      throw Exception('Impossible de rechercher les produits.');
     }
   }
 

@@ -4,6 +4,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/styled_app_bar.dart';
 import '../../../../core/constants/subscription_plans.dart';
 import '../../../../data/services/subscription_service.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class PlansSelectionPage extends StatefulWidget {
   const PlansSelectionPage({super.key});
@@ -103,12 +104,7 @@ class _PlansSelectionPageState extends State<PlansSelectionPage> {
         setState(() {
           _isActivating = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erreur: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }

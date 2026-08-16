@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../data/services/product_service.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class RecentProductsCircle extends StatefulWidget {
   const RecentProductsCircle({super.key});
@@ -47,9 +48,7 @@ class _RecentProductsCircleState extends State<RecentProductsCircle> {
         _isLoading = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur lors du chargement des produits récents: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }

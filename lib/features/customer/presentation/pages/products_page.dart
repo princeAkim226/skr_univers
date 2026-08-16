@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../data/services/product_service.dart';
 import '../widgets/product_card.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class ProductsPage extends StatefulWidget {
   final String? initialCategory;
@@ -47,9 +48,7 @@ class _ProductsPageState extends State<ProductsPage> {
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }
@@ -67,9 +66,7 @@ class _ProductsPageState extends State<ProductsPage> {
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }
@@ -90,9 +87,7 @@ class _ProductsPageState extends State<ProductsPage> {
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur de recherche: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }

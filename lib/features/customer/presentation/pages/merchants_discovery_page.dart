@@ -10,6 +10,7 @@ import '../../../../data/services/image_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../widgets/merchant_card.dart';
 import '../widgets/category_selector.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class MerchantsDiscoveryPage extends StatefulWidget {
   const MerchantsDiscoveryPage({super.key});
@@ -114,9 +115,7 @@ class _MerchantsDiscoveryPageState extends State<MerchantsDiscoveryPage> {
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Impossible de contacter: $e')),
-      );
+      ErrorHandler.showError(context, e);
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/error_handling/error_handler.dart';
 import '../../../../core/theme/app_theme.dart';
 
 /// Overlay d'erreur spécifique pour la connexion
@@ -147,7 +148,7 @@ class LoginErrorOverlay extends StatelessWidget {
     } else if (message?.contains('réseau') == true) {
       return 'Impossible de se connecter au serveur. Vérifiez votre connexion internet et réessayez.';
     }
-    return message ?? 'Une erreur inattendue s\'est produite. Veuillez réessayer.';
+    return ErrorHandler.getUserFriendlyMessage(message);
   }
 
   Widget _buildActionButtons() {

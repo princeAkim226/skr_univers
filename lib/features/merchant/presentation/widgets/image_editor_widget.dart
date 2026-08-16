@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class ImageEditorWidget extends StatefulWidget {
   final String? initialImagePath;
@@ -103,12 +104,7 @@ class _ImageEditorWidgetState extends State<ImageEditorWidget> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erreur lors de la sauvegarde: $e'),
-            backgroundColor: AppTheme.errorColor,
-          ),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/number_utils.dart';
 import '../../../../data/services/cart_service.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -35,9 +36,7 @@ class _CartPageState extends State<CartPage> {
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }
@@ -48,9 +47,7 @@ class _CartPageState extends State<CartPage> {
       await _loadCartItems();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }
@@ -69,9 +66,7 @@ class _CartPageState extends State<CartPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }

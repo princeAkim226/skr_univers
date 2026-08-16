@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../data/services/product_service.dart';
 import '../widgets/product_card.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -88,9 +89,7 @@ class _SearchPageState extends State<SearchPage> {
         _isLoading = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur de recherche: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }

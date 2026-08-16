@@ -44,7 +44,7 @@ class PaymentService {
       print('Erreur lors du paiement: $e');
       return {
         'success': false,
-        'error': 'Erreur lors du traitement du paiement: $e',
+        'error': 'Impossible de traiter le paiement. Réessayez.',
       };
     }
   }
@@ -91,7 +91,7 @@ class PaymentService {
       print('Erreur lors du paiement par carte: $e');
       return {
         'success': false,
-        'error': 'Erreur lors du traitement du paiement par carte: $e',
+        'error': 'Impossible de traiter le paiement par carte. Réessayez.',
       };
     }
   }

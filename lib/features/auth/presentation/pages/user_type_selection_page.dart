@@ -92,7 +92,10 @@ class _UserTypeSelectionPageState extends State<UserTypeSelectionPage>
                 opacity: _fadeIn,
                 child: SlideTransition(
                   position: _slideUp,
-                  child: SingleChildScrollView(
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 420),
+                      child: SingleChildScrollView(
                     padding: EdgeInsets.fromLTRB(24, 28, 24, 24 + bottomPad),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -232,6 +235,8 @@ class _UserTypeSelectionPageState extends State<UserTypeSelectionPage>
                         ),
 
                       ],
+                    ),
+                      ),
                     ),
                   ),
                 ),

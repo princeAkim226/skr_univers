@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/error_handling/error_handler.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/number_utils.dart';
 import '../../../../data/services/product_service.dart';
@@ -45,12 +46,7 @@ class _JobsCategoryPageState extends State<JobsCategoryPage> {
     } catch (e) {
       setState(() => _loading = false);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Impossible de charger les offres d\'emploi: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ErrorHandler.showError(context, e);
     }
   }
 

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../data/services/notification_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -32,9 +33,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }
@@ -53,9 +52,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }
@@ -79,9 +76,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }

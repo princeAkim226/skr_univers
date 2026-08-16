@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../data/services/story_service.dart';
 import '../../../../core/widgets/styled_app_bar.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class StoryStatsPage extends StatefulWidget {
   const StoryStatsPage({super.key});
@@ -71,12 +72,7 @@ class _StoryStatsPageState extends State<StoryStatsPage> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erreur lors du chargement des statistiques: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }

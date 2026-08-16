@@ -4,6 +4,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/vintage_icons.dart';
 import '../../../../core/widgets/styled_app_bar.dart';
 import '../../../../data/services/product_service.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class MerchantProductsPage extends StatefulWidget {
   const MerchantProductsPage({super.key});
@@ -42,9 +43,7 @@ class _MerchantProductsPageState extends State<MerchantProductsPage> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur lors du chargement des produits: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }
@@ -59,9 +58,7 @@ class _MerchantProductsPageState extends State<MerchantProductsPage> {
       );
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }

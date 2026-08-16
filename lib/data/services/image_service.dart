@@ -33,7 +33,7 @@ class ImageService {
 
       return compressedFile;
     } catch (e) {
-      throw Exception('Erreur lors de la compression: $e');
+      throw Exception('Erreur lors de la compression.');
     }
   }
 
@@ -53,7 +53,7 @@ class ImageService {
       }
       return null;
     } catch (e) {
-      throw Exception('Erreur lors de la sélection d\'image: $e');
+      throw Exception('Impossible de sélectionner l’image. Réessayez.');
     }
   }
 
@@ -73,7 +73,7 @@ class ImageService {
       }
       return null;
     } catch (e) {
-      throw Exception('Erreur lors de la prise de photo: $e');
+      throw Exception('Erreur lors de la prise de photo.');
     }
   }
 
@@ -321,9 +321,9 @@ class ImageService {
       } else if (e.toString().contains('File too large')) {
         throw Exception('L\'image est trop volumineuse. Taille maximale: ${getFileSizeString(maxFileSize)}');
       } else if (e.toString().contains('row-level security policy') || e.toString().contains('403')) {
-        throw Exception('Erreur de permissions. Les politiques de sécurité empêchent l\'upload. Veuillez contacter l\'administrateur.');
+        throw Exception('Impossible d’envoyer l’image. Réessayez.');
       } else {
-        throw Exception('Erreur lors de l\'upload de l\'image: $e');
+        throw Exception('Impossible d’envoyer l’image. Réessayez.');
       }
     }
   }

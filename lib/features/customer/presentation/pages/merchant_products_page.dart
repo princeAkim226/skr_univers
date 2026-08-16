@@ -5,6 +5,7 @@ import '../../../../core/theme/vintage_icons.dart';
 import '../../../../core/widgets/styled_app_bar.dart';
 import '../../../../data/services/product_service.dart';
 import '../widgets/product_card.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class MerchantProductsPage extends StatefulWidget {
   final String merchantId;
@@ -44,9 +45,7 @@ class _MerchantProductsPageState extends State<MerchantProductsPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors du chargement des produits: $e')),
-      );
+      ErrorHandler.showError(context, e);
     }
   }
 

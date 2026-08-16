@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../data/services/cache_service.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class ConnectivityStatus extends StatefulWidget {
   const ConnectivityStatus({super.key});
@@ -43,9 +44,7 @@ class _ConnectivityStatusState extends State<ConnectivityStatus> {
       await _checkConnectivity();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur de synchronisation: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     } finally {
       setState(() => _isChecking = false);

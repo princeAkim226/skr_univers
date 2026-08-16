@@ -5,6 +5,7 @@ import '../../../../core/utils/number_utils.dart';
 import '../../../../data/services/cart_service.dart';
 import '../../../../data/services/order_service.dart';
 import '../../../../data/services/promo_service.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});
@@ -60,9 +61,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }
@@ -100,9 +99,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);

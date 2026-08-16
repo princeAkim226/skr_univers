@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../data/services/story_service.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class AddStoryPage extends StatefulWidget {
   const AddStoryPage({super.key});
@@ -79,9 +80,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors de l\'ajout des images: $e')),
-      );
+      ErrorHandler.showError(context, e);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -124,9 +123,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
       context.pop(true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur: $e')),
-      );
+      ErrorHandler.showError(context, e);
     } finally {
       if (mounted) setState(() => _loading = false);
     }

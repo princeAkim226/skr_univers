@@ -7,6 +7,7 @@ import '../../../../core/constants/subscription_plans.dart';
 import '../../../../data/services/subscription_service.dart';
 import '../../../../data/services/messaging_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class SubscriptionsManagementPage extends StatefulWidget {
   const SubscriptionsManagementPage({super.key});
@@ -394,12 +395,7 @@ class _SubscriptionsManagementPageState extends State<SubscriptionsManagementPag
     } catch (e) {
       print('Erreur lors de l\'ouverture du chat: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erreur: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }

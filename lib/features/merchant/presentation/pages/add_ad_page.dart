@@ -7,6 +7,7 @@ import '../../../../data/services/ad_subscription_service.dart';
 import '../../../../core/constants/subscription_plans.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class AddAdPage extends StatefulWidget {
   const AddAdPage({super.key});
@@ -150,12 +151,7 @@ class _AddAdPageState extends State<AddAdPage> {
         if (errorMessage.contains('abonnement publicitaire')) {
           _showAdSubscriptionDialog();
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Erreur lors de la création: $e'),
-              backgroundColor: Colors.red,
-            ),
-          );
+          ErrorHandler.showError(context, e);
         }
       }
     } finally {
@@ -440,12 +436,7 @@ class _AddAdPageState extends State<AddAdPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erreur: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ErrorHandler.showError(context, e);
       }
     } finally {
       if (mounted) {

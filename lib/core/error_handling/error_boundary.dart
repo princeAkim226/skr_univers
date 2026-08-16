@@ -390,12 +390,6 @@ class _SimpleErrorWidget extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  // Détails techniques
-                  if (error != null) ...[
-                    const SizedBox(height: 12),
-                    _SimpleErrorDetails(error: error, stackTrace: stackTrace),
-                  ],
-                  // Bouton
                   if (onRetry != null) ...[
                     const SizedBox(height: 16),
                     _SimpleButton(
@@ -440,91 +434,6 @@ class _SimpleButton extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
       ),
-    );
-  }
-}
-
-/// Détails d'erreur ultra-simple
-class _SimpleErrorDetails extends StatefulWidget {
-  final dynamic error;
-  final StackTrace? stackTrace;
-
-  const _SimpleErrorDetails({required this.error, this.stackTrace});
-
-  @override
-  State<_SimpleErrorDetails> createState() => _SimpleErrorDetailsState();
-}
-
-class _SimpleErrorDetailsState extends State<_SimpleErrorDetails> {
-  bool _isExpanded = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final errorText = widget.error.toString();
-    final st = widget.stackTrace?.toString();
-    final fullText = (st == null || st.trim().isEmpty) ? errorText : '$errorText\n\n$st';
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.red.shade100,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.red.shade300),
-      ),
-      child: _isExpanded ? _buildExpanded(fullText) : _buildCollapsed(),
-    );
-  }
-
-  Widget _buildCollapsed() {
-    return GestureDetector(
-      onTap: () => setState(() => _isExpanded = true),
-      child: Container(
-        padding: const EdgeInsets.all(12.0),
-        child: Text(
-          '▶ Détails techniques',
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: Colors.red.shade800,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildExpanded(String displayText) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        GestureDetector(
-          onTap: () => setState(() => _isExpanded = false),
-          child: Container(
-            padding: const EdgeInsets.all(12.0),
-            child: Text(
-              '▼ Détails techniques',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Colors.red.shade800,
-              ),
-            ),
-          ),
-        ),
-        Container(
-          constraints: const BoxConstraints(maxHeight: 150),
-          padding: const EdgeInsets.all(12.0),
-          child: SingleChildScrollView(
-            child: Text(
-              displayText,
-              style: const TextStyle(
-                fontSize: 10,
-                fontFamily: 'monospace',
-                color: Colors.black87,
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

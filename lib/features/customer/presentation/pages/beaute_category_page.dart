@@ -3,6 +3,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/number_utils.dart';
 import '../../../../data/services/product_service.dart';
 import '../widgets/product_card.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class BeauteCategoryPage extends StatefulWidget {
   const BeauteCategoryPage({super.key});
@@ -37,12 +38,7 @@ class _BeauteCategoryPageState extends State<BeauteCategoryPage> {
     } catch (e) {
       setState(() => _loading = false);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Impossible de charger la catégorie Beauté: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ErrorHandler.showError(context, e);
     }
   }
 

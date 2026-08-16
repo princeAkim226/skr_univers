@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/vintage_icons.dart';
 import '../../../../core/widgets/styled_app_bar.dart';
 import '../../../../data/services/story_service.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class MerchantStoriesPage extends StatefulWidget {
   const MerchantStoriesPage({super.key});
@@ -38,12 +39,7 @@ class _MerchantStoriesPageState extends State<MerchantStoriesPage> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erreur lors du chargement des stories: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }
@@ -63,12 +59,7 @@ class _MerchantStoriesPageState extends State<MerchantStoriesPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erreur lors de la suppression: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }
@@ -88,12 +79,7 @@ class _MerchantStoriesPageState extends State<MerchantStoriesPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erreur lors de la republication: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }

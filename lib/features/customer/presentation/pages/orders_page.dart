@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/number_utils.dart';
 import '../../../../data/services/order_service.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class OrdersPage extends StatefulWidget {
   const OrdersPage({super.key});
@@ -33,9 +34,7 @@ class _OrdersPageState extends State<OrdersPage> {
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }

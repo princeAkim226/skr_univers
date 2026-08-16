@@ -3,6 +3,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/number_utils.dart';
 import '../../../../data/services/product_service.dart';
 import '../../../../data/services/location_service.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class NearbyProductsWidget extends StatefulWidget {
   const NearbyProductsWidget({super.key});
@@ -58,12 +59,7 @@ class _NearbyProductsWidgetState extends State<NearbyProductsWidget> {
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erreur lors du chargement des produits proches: $e'),
-            backgroundColor: AppTheme.errorColor,
-          ),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }

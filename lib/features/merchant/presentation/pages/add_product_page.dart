@@ -11,6 +11,7 @@ import '../../../../data/services/product_service.dart';
 import '../../../../data/services/location_service.dart';
 import '../widgets/image_editor_widget.dart';
 import '../widgets/custom_category_dialog.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class AddProductPage extends StatefulWidget {
   const AddProductPage({super.key});
@@ -96,12 +97,7 @@ class _AddProductPageState extends State<AddProductPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erreur de géolocalisation: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ErrorHandler.showError(context, e);
       }
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -151,9 +147,7 @@ class _AddProductPageState extends State<AddProductPage> {
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors de l\'ajout des images: $e')),
-      );
+      ErrorHandler.showError(context, e);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -209,9 +203,7 @@ class _AddProductPageState extends State<AddProductPage> {
       context.pop(true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur: $e')),
-      );
+      ErrorHandler.showError(context, e);
     } finally {
       if (mounted) setState(() => _loading = false);
     }

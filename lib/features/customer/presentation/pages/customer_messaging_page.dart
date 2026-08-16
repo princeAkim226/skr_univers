@@ -109,7 +109,7 @@ class _CustomerMessagingPageState extends State<CustomerMessagingPage> {
         setState(() {
           _isLoading = false;
         });
-        _showError('Erreur lors du chargement: ${e.toString()}');
+        _showError('Impossible de charger la messagerie. Réessayez.');
       }
     }
   }
@@ -726,7 +726,7 @@ class _CustomerMessagingPageState extends State<CustomerMessagingPage> {
     } catch (e) {
       print('Erreur lors de l\'ouverture du chat: $e');
       if (mounted) {
-        _showError('Erreur lors de l\'ouverture du chat: ${e.toString()}');
+        _showError('Impossible d’ouvrir la conversation. Réessayez.');
       }
     }
   }

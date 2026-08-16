@@ -60,6 +60,10 @@ class ErrorHandler {
   /// Convertit une erreur technique en message utilisateur convivial
   static String getUserFriendlyMessage(dynamic error) {
     if (error == null) return _defaultErrorMessage;
+
+    if (error is String) {
+      return _sanitize(error);
+    }
     
     String errorString = error.toString().toLowerCase();
     
@@ -87,13 +91,8 @@ class ErrorHandler {
     if (error is Exception) {
       final message = error.toString();
       if (message.isNotEmpty && message != 'Exception: null' && !message.startsWith('Exception: Exception')) {
-        String cleanMessage = message;
-        if (cleanMessage.startsWith('Exception: ')) {
-          cleanMessage = cleanMessage.substring(11);
-        }
-        if (!_looksTechnical(cleanMessage) &&
-            cleanMessage.length > 10 &&
-            cleanMessage.length < 160) {
+        final cleanMessage = _sanitize(message);
+        if (cleanMessage != _defaultErrorMessage) {
           return cleanMessage;
         }
       }
@@ -137,17 +136,68 @@ class ErrorHandler {
 
   static bool _looksTechnical(String message) {
     final value = message.toLowerCase();
-    return value.contains('postgrest') ||
-        value.contains('socketexception') ||
-        value.contains('jwt') ||
-        value.contains('stack') ||
-        value.contains('package:') ||
-        value.contains('#0 ') ||
-        value.contains('typeerror') ||
-        value.contains('null check') ||
-        value.contains('sqlstate') ||
-        value.contains('violates') ||
-        value.contains('pgrst');
+    const markers = [
+      'postgrest',
+      'socketexception',
+      'jwt',
+      'stack',
+      'package:',
+      '#0 ',
+      'typeerror',
+      'null check',
+      'sqlstate',
+      'violates',
+      'pgrst',
+      'supabase',
+      'postgres',
+      'schema cache',
+      'relation',
+      'column',
+      'dart:',
+      'flutter error',
+      'lateinitialization',
+      'nosuchmethod',
+      'rangeerror',
+      'formatexception',
+      'xmlhttprequest',
+      'row-level security',
+      'rls policy',
+      'authretryable',
+      'invalid jwt',
+      'hint:',
+      'details:',
+      'statuscode',
+      'status code',
+      'syntax error',
+      'undefined table',
+      'does not exist',
+      'permission denied for',
+      'failed host lookup',
+      'os error',
+      'errno',
+    ];
+    return markers.any(value.contains);
+  }
+
+  static String _sanitize(String message) {
+    var clean = message.trim();
+    if (clean.startsWith('Exception: ')) {
+      clean = clean.substring(11).trim();
+    }
+    if (clean.isEmpty || _looksTechnical(clean) || clean.length > 160) {
+      return _defaultErrorMessage;
+    }
+    return clean;
+  }
+
+  static String _displayMessage(dynamic error, String? customMessage) {
+    if (customMessage != null &&
+        customMessage.trim().isNotEmpty &&
+        !_looksTechnical(customMessage)) {
+      final clean = _sanitize(customMessage);
+      if (clean != _defaultErrorMessage) return clean;
+    }
+    return getUserFriendlyMessage(error);
   }
   
   /// Gestion spécifique des erreurs Postgrest
@@ -194,7 +244,7 @@ class ErrorHandler {
             }
           }
           if (!_looksTechnical(cleanMessage) && cleanMessage.length < 160) {
-            return cleanMessage;
+            return _sanitize(cleanMessage);
           }
         }
         return 'Impossible de terminer cette action. Réessayez.';
@@ -235,7 +285,7 @@ class ErrorHandler {
       case '500':
         return 'Erreur du serveur. Veuillez réessayer plus tard.';
       default:
-        return error.message.isNotEmpty ? error.message : _defaultErrorMessage;
+        return _defaultErrorMessage;
     }
   }
   
@@ -262,7 +312,7 @@ class ErrorHandler {
     VoidCallback? onRetry,
     bool showAsDialog = false,
   }) {
-    final message = customMessage ?? getUserFriendlyMessage(error);
+    final message = _displayMessage(error, customMessage);
     
     if (showAsDialog) {
       showDialog(
@@ -449,7 +499,7 @@ class ErrorHandler {
     VoidCallback? onRetry,
     VoidCallback? onCancel,
   }) {
-    final message = customMessage ?? getUserFriendlyMessage(error);
+    final message = _displayMessage(error, customMessage);
     
     showDialog(
       context: context,

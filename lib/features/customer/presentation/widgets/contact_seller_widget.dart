@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/error_handling/error_handler.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/number_utils.dart';
 import '../../../../data/services/messaging_service.dart';
@@ -275,7 +276,7 @@ class ContactSellerWidget extends StatelessWidget {
         _showError(context, 'Impossible de créer la conversation');
       }
     } catch (e) {
-      _showError(context, 'Erreur lors de la création de la conversation: $e');
+      ErrorHandler.showError(context, e);
     }
   }
 

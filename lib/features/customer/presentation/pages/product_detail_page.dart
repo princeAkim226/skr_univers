@@ -5,6 +5,7 @@ import '../../../../data/services/product_service.dart';
 import '../../../../data/services/cart_service.dart';
 import '../../../../data/services/favorites_service.dart';
 import '../widgets/contact_seller_widget.dart';
+import '../../../../core/error_handling/error_handler.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final String productId;
@@ -78,9 +79,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         _isLoading = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: $e')),
-        );
+        ErrorHandler.showError(context, e);
       }
     }
   }
@@ -433,9 +432,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         }
                       } catch (e) {
                         if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Erreur: $e')),
-                          );
+                          ErrorHandler.showError(context, e);
                         }
                       }
                     },
