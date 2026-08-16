@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/error_handling/error_boundary.dart';
 import '../../../../data/services/auth_service.dart';
+import '../../../../data/services/phone_auth_service.dart';
+import '../widgets/login_error_overlay.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,97 +14,128 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with ErrorHandlingMixin {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
-  bool _isLoading = false;
   final _authService = AuthService();
+  final _phoneAuthService = PhoneAuthService();
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _phoneController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) {
-      print('Validation du formulaire de connexion échouée.');
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
-
-    print('Tentative de connexion...');
-    print('Email: ${_emailController.text.trim()}');
-
-    try {
-      final response = await _authService.signIn(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-      );
-
-      if (response.user != null) {
-        print('Connexion réussie. Données utilisateur: ${response.user!.toJson()}');
-        // Récupérer le type d'utilisateur depuis les métadonnées
-        final userType = response.user!.userMetadata?['user_type'] as String?;
-        print('Type d\'utilisateur: $userType');
+    await executeWithErrorHandling(
+      () async {
+        // Rechercher l'utilisateur par numéro de téléphone dans la table users centralisée
+        final phoneNumber = _phoneAuthService.formatPhoneNumber(_phoneController.text.trim());
+        final phoneNumberWithoutPrefix = _phoneController.text.trim().replaceAll(RegExp(r'[^\d]'), '');
         
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Connexion réussie !'),
-              backgroundColor: AppTheme.successColor,
-            ),
+        // Chercher dans la table users avec le numéro exact d'abord
+        var userResponse = await _phoneAuthService.supabase
+            .from('users')
+            .select('*')
+            .eq('phone_number', phoneNumberWithoutPrefix)
+            .maybeSingle();
+        
+        // Si pas trouvé, essayer avec le format complet
+        if (userResponse == null) {
+          userResponse = await _phoneAuthService.supabase
+              .from('users')
+              .select('*')
+              .eq('phone_number', phoneNumber)
+              .maybeSingle();
+        }
+        
+        if (userResponse == null) {
+          throw Exception('Aucun compte trouvé avec ce numéro de téléphone');
+        }
+        
+        // Vérifier si l'utilisateur a un email
+        final userEmail = userResponse['email'];
+        
+        if (userEmail == null || userEmail.isEmpty) {
+          // Connexion directe avec le numéro de téléphone (sans email)
+          final response = await _phoneAuthService.supabase.auth.signInWithPassword(
+            phone: userResponse['phone_number'],
+            password: _passwordController.text,
           );
           
-          // Rediriger selon le type d'utilisateur
-          if (userType == AppConstants.userTypeMerchant) {
-            context.go('/merchant');
+          if (response.user != null) {
+            if (mounted) {
+              showSuccess('Connexion réussie !');
+              
+              // Rediriger selon le type d'utilisateur
+              final userType = userResponse['user_type'];
+              if (userType == 'merchant') {
+                context.go('/merchant');
+              } else {
+                context.go('/customer');
+              }
+            }
           } else {
-            context.go('/customer');
+            throw Exception('Mot de passe incorrect');
+          }
+        } else {
+          // Connexion classique avec email
+          final response = await _authService.signIn(
+            email: userEmail,
+            password: _passwordController.text,
+          );
+          
+          if (response.user != null) {
+            if (mounted) {
+              showSuccess('Connexion réussie !');
+              
+              // Rediriger selon le type d'utilisateur
+              final userType = userResponse['user_type'];
+              if (userType == 'merchant') {
+                context.go('/merchant');
+              } else {
+                context.go('/customer');
+              }
+            }
+          } else {
+            throw Exception('Mot de passe incorrect');
           }
         }
-      } else {
-        print('Réponse Supabase (connexion) sans utilisateur: ${response.toString()}');
-        throw Exception('Erreur lors de la connexion (utilisateur null)');
-      }
-    } catch (e) {
-      print('Erreur de connexion: ${e.toString()}');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erreur de connexion: ${e.toString()}'),
-            backgroundColor: AppTheme.errorColor,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-        print('Processus de connexion terminé.');
-      }
-    }
+      },
+      onSuccess: () {
+        // Connexion réussie
+      },
+      showErrorSnackBar: false, // Désactiver le SnackBar d'erreur
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+      body: LoginErrorOverlayWidget(
+        errorMessage: errorMessage,
+        onRetry: () => clearError(),
+        onCreateAccount: () {
+          clearError();
+          context.go('/user-type-selection');
+        },
+        onDismiss: () => clearError(),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
                 const SizedBox(height: 40),
                 
                 // Logo et titre
@@ -144,18 +178,19 @@ class _LoginPageState extends State<LoginPage> {
                 
                 // Formulaire
                 TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
+                  controller: _phoneController,
+                  keyboardType: TextInputType.phone,
                   decoration: const InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.email_outlined),
+                    labelText: 'Numéro de téléphone',
+                    prefixIcon: Icon(Icons.phone_outlined),
+                    hintText: '+226 XX XX XX XX',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Veuillez entrer votre email';
+                      return 'Veuillez entrer votre numéro de téléphone';
                     }
-                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                      return 'Veuillez entrer un email valide';
+                    if (!_phoneAuthService.isValidPhoneNumber(value)) {
+                      return 'Format de numéro invalide';
                     }
                     return null;
                   },
@@ -212,18 +247,49 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 24),
                 
                 // Bouton de connexion
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _handleLogin,
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                SizedBox(
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: isLoading ? null : _handleLogin,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryColor,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: isLoading
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              const Text(
+                                'Connexion...',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          )
+                        : const Text(
+                            'Se connecter',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        )
-                      : const Text('Se connecter'),
+                  ),
                 ),
                 
                 const SizedBox(height: 24),
@@ -253,7 +319,8 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () => context.go('/user-type-selection'),
                   child: const Text('Créer un compte'),
                 ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

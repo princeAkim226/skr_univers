@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Couleurs principales
-  static const Color primaryColor = Color(0xFF6366F1);
-  static const Color primaryLightColor = Color(0xFF818CF8);
-  static const Color primaryDarkColor = Color(0xFF4F46E5);
+  // Couleurs principales - Thème vert dominant
+  static const Color primaryColor = Color(0xFF2E7D32); // Vert foncé principal
+  static const Color primaryLightColor = Color(0xFF4CAF50); // Vert clair
+  static const Color primaryDarkColor = Color(0xFF1B5E20); // Vert très foncé
   
-  // Couleurs secondaires
-  static const Color secondaryColor = Color(0xFF10B981);
-  static const Color secondaryLightColor = Color(0xFF34D399);
+  // Couleurs secondaires - Vert complémentaire
+  static const Color secondaryColor = Color(0xFF388E3C); // Vert secondaire
+  static const Color secondaryLightColor = Color(0xFF66BB6A); // Vert clair secondaire
   
   // Couleurs neutres
   static const Color backgroundColor = Color(0xFFF8FAFC);
@@ -20,21 +20,70 @@ class AppTheme {
   static const Color textSecondaryColor = Color(0xFF6B7280);
   static const Color textLightColor = Color(0xFF9CA3AF);
   
-  // Couleurs d'état
-  static const Color successColor = Color(0xFF10B981);
-  static const Color warningColor = Color(0xFFF59E0B);
-  static const Color errorColor = Color(0xFFEF4444);
-  static const Color infoColor = Color(0xFF3B82F6);
+  // Couleurs d'état - Palette verte
+  static const Color successColor = Color(0xFF4CAF50); // Vert succès
+  static const Color warningColor = Color(0xFFFF9800); // Orange attention
+  static const Color errorColor = Color(0xFFF44336); // Rouge erreur
+  static const Color infoColor = Color(0xFF2E7D32); // Vert info
   
-  // Couleurs de commerce
-  static const Color priceColor = Color(0xFF059669);
-  static const Color discountColor = Color(0xFFDC2626);
-  static const Color ratingColor = Color(0xFFF59E0B);
+  // Couleurs de commerce - Thème vert
+  static const Color priceColor = Color(0xFF2E7D32); // Vert pour les prix
+  static const Color discountColor = Color(0xFFF44336); // Rouge pour les réductions
+  static const Color ratingColor = Color(0xFFFFC107); // Jaune pour les étoiles
+
+  // Gradients modernes
+  static const LinearGradient primaryGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [primaryColor, primaryLightColor],
+  );
+  
+  static const LinearGradient secondaryGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [secondaryColor, secondaryLightColor],
+  );
+  
+  static const LinearGradient successGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [successColor, Color(0xFF00CEC9)],
+  );
+
+  // Ombres modernes
+  static List<BoxShadow> get lightShadow => [
+    BoxShadow(
+      color: Colors.black.withOpacity(0.05),
+      blurRadius: 10,
+      offset: const Offset(0, 2),
+    ),
+  ];
+  
+  static List<BoxShadow> get mediumShadow => [
+    BoxShadow(
+      color: Colors.black.withOpacity(0.1),
+      blurRadius: 20,
+      offset: const Offset(0, 4),
+    ),
+  ];
+  
+  static List<BoxShadow> get heavyShadow => [
+    BoxShadow(
+      color: Colors.black.withOpacity(0.15),
+      blurRadius: 30,
+      offset: const Offset(0, 8),
+    ),
+  ];
 
   static ThemeData get lightTheme {
     return ThemeData(
-      useMaterial3: true,
-      fontFamily: 'Poppins',
+      useMaterial3: false, // Désactiver Material 3 temporairement
+      iconTheme: const IconThemeData(
+        color: AppTheme.textPrimaryColor,
+      ),
+      primaryIconTheme: const IconThemeData(
+        color: AppTheme.primaryColor,
+      ),
       
       // Couleurs du thème
       colorScheme: const ColorScheme.light(
@@ -68,10 +117,10 @@ class AppTheme {
       // Card
       cardTheme: CardTheme(
         color: cardColor,
-        elevation: 2,
-        shadowColor: Colors.black.withOpacity(0.1),
+        elevation: 0,
+        shadowColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(20),
         ),
       ),
       
@@ -81,9 +130,10 @@ class AppTheme {
           backgroundColor: primaryColor,
           foregroundColor: Colors.white,
           elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          shadowColor: Colors.transparent,
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(16),
           ),
           textStyle: const TextStyle(
             fontSize: 16,
@@ -96,10 +146,10 @@ class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: primaryColor,
-          side: const BorderSide(color: primaryColor),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          side: const BorderSide(color: primaryColor, width: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(16),
           ),
           textStyle: const TextStyle(
             fontSize: 16,
@@ -123,26 +173,26 @@ class AppTheme {
       // Input Decoration
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: Colors.grey.shade50,
+        fillColor: const Color(0xFFF8F9FA),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: primaryColor, width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: errorColor),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: errorColor, width: 2),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        hintStyle: TextStyle(
-          color: Colors.grey.shade500,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        hintStyle: const TextStyle(
+          color: textLightColor,
           fontSize: 14,
         ),
       ),

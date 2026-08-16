@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "1. App mobile",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "2. App web (copie mobile)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "deviceId": "chrome"
+    },
+    {
+      "name": "3. Plateforme Admin",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/admin_main.dart",
+      "deviceId": "chrome"
+    }
+  ]
+}

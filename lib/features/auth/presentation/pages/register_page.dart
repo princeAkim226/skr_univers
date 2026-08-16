@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/error_handling/error_boundary.dart';
 import '../../../../data/services/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -16,7 +17,7 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends State<RegisterPage> with ErrorHandlingMixin {
   final _formKey = GlobalKey<FormState>();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
@@ -33,7 +34,6 @@ class _RegisterPageState extends State<RegisterPage> {
   
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
-  bool _isLoading = false;
   final _authService = AuthService();
 
   bool get isMerchant => widget.userType == AppConstants.userTypeMerchant;
@@ -55,99 +55,65 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> _handleRegister() async {
     if (!_formKey.currentState!.validate()) {
-      print('Validation du formulaire échouée.');
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    await executeWithErrorHandling(
+      () async {
+        if (isMerchant) {
+          // Inscription e-commerçant
+          final response = await _authService.signUpMerchant(
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+            firstName: _firstNameController.text.trim(),
+            lastName: _lastNameController.text.trim(),
+            businessName: _businessNameController.text.trim(),
+            businessDescription: _businessDescriptionController.text.trim(),
+            businessAddress: _businessAddressController.text.trim(),
+            businessPhone: _businessPhoneController.text.trim(),
+            phoneNumber: _phoneController.text.trim(),
+          );
 
-    print('Tentative d\'inscription...');
-    print('Email: ${_emailController.text.trim()}');
-    print('Type d\'utilisateur: ${widget.userType}');
-
-    try {
-      if (isMerchant) {
-        print('Inscription en tant qu\'e-commerçant...');
-        print('Prénom: ${_firstNameController.text.trim()}');
-        print('Nom: ${_lastNameController.text.trim()}');
-        print('Nom entreprise: ${_businessNameController.text.trim()}');
-        print('Téléphone: ${_phoneController.text.trim()}');
-        // Inscription e-commerçant
-        final response = await _authService.signUpMerchant(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
-          firstName: _firstNameController.text.trim(),
-          lastName: _lastNameController.text.trim(),
-          businessName: _businessNameController.text.trim(),
-          businessDescription: _businessDescriptionController.text.trim(),
-          businessAddress: _businessAddressController.text.trim(),
-          businessPhone: _businessPhoneController.text.trim(),
-          phoneNumber: _phoneController.text.trim(),
-        );
-
-        if (response.user != null) {
-          print('Réponse Supabase (e-commerçant): ${response.user!.toJson()}');
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Compte e-commerçant créé avec succès !'),
-                backgroundColor: AppTheme.successColor,
-              ),
-            );
-            context.go('/merchant');
+          if (response.user != null) {
+            if (mounted) {
+              showSuccess('Compte e-commerçant créé avec succès !');
+              context.go('/merchant');
+            }
+          } else {
+            throw Exception('Erreur lors de la création du compte');
           }
         } else {
-          throw Exception('Erreur lors de la création du compte');
-        }
-      } else {
-        print('Inscription en tant que client...');
-        print('Prénom: ${_firstNameController.text.trim()}');
-        print('Nom: ${_lastNameController.text.trim()}');
-        print('Téléphone: ${_phoneController.text.trim()}');
-        // Inscription client
-        final response = await _authService.signUpCustomer(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
-          firstName: _firstNameController.text.trim(),
-          lastName: _lastNameController.text.trim(),
-          phoneNumber: _phoneController.text.trim(),
-        );
-
-        if (response.user != null) {
-          print('Réponse Supabase (client): ${response.user!.toJson()}');
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Compte client créé avec succès !'),
-                backgroundColor: AppTheme.successColor,
-              ),
-            );
-            context.go('/customer');
+          // Si pas d'email fourni, créer un email temporaire basé sur le téléphone
+          String email = _emailController.text.trim();
+          if (email.isEmpty) {
+            final phoneNumber = _phoneController.text.trim().replaceAll(RegExp(r'[^\d]'), '');
+            final timestamp = DateTime.now().millisecondsSinceEpoch;
+            email = 'temp_${phoneNumber}_$timestamp@gmail.com';
           }
-        } else {
-          throw Exception('Erreur lors de la création du compte');
+          
+          // Inscription client
+          final response = await _authService.signUpCustomer(
+            email: email,
+            password: _passwordController.text,
+            firstName: _firstNameController.text.trim(),
+            lastName: _lastNameController.text.trim(),
+            phoneNumber: _phoneController.text.trim(),
+          );
+
+          if (response.user != null) {
+            if (mounted) {
+              showSuccess('Compte client créé avec succès !');
+              context.go('/customer');
+            }
+          } else {
+            throw Exception('Erreur lors de la création du compte');
+          }
         }
-      }
-    } catch (e) {
-      print('Erreur lors de l\'inscription: ${e.toString()}');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erreur d\'inscription: ${e.toString()}'),
-            backgroundColor: AppTheme.errorColor,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-        print('Processus d\'inscription terminé.');
-      }
-    }
+      },
+      onSuccess: () {
+        // Inscription réussie
+      },
+    );
   }
 
   @override
@@ -260,15 +226,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
-                    labelText: 'Email *',
+                    labelText: 'Email (optionnel)',
                     prefixIcon: Icon(Icons.email_outlined),
                   ),
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Veuillez entrer votre email';
-                    }
-                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                      return 'Veuillez entrer un email valide';
+                    if (value != null && value.isNotEmpty) {
+                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                        return 'Veuillez entrer un email valide';
+                      }
                     }
                     return null;
                   },
@@ -280,9 +245,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
                   decoration: const InputDecoration(
-                    labelText: 'Téléphone (optionnel)',
+                    labelText: 'Téléphone *',
                     prefixIcon: Icon(Icons.phone_outlined),
+                    hintText: '+226 XX XX XX XX',
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Veuillez entrer votre numéro de téléphone';
+                    }
+                    // Validation basique du format de téléphone
+                    if (value.length < 8) {
+                      return 'Le numéro de téléphone doit contenir au moins 8 chiffres';
+                    }
+                    return null;
+                  },
                 ),
                 
                 const SizedBox(height: 16),
@@ -427,8 +403,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 
                 // Bouton d'inscription
                 ElevatedButton(
-                  onPressed: _isLoading ? null : _handleRegister,
-                  child: _isLoading
+                  onPressed: isLoading ? null : _handleRegister,
+                  child: isLoading
                       ? const SizedBox(
                           height: 20,
                           width: 20,

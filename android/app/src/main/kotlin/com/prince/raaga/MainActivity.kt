@@ -1,4 +1,4 @@
-package com.example.skr_univers
+package com.prince.raaga
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -40,7 +40,7 @@ class AuthService {
         print('AuthService: Utilisateur authentifié, création du profil dans la table users...');
         await _supabase.from('users').insert({
           'id': response.user!.id,
-          'email': email,
+          'email': email.startsWith('temp_') && email.endsWith('@gmail.com') ? null : email,
           'first_name': firstName,
           'last_name': lastName,
           'phone_number': phoneNumber,
@@ -152,9 +152,9 @@ class AuthService {
           .from('users')
           .select()
           .eq('id', userId)
-          .single();
+          .maybeSingle();
 
-      if (response != null) {
+      if (response != null && response.isNotEmpty) {
         return app_models.User(
           id: response['id'],
           email: response['email'],
@@ -199,5 +199,31 @@ class AuthService {
     final user = _supabase.auth.currentUser;
     if (user == null) return null;
     return user.userMetadata?['user_type'] as String?;
+  }
+
+  // Vérifier si l'utilisateur courant est administrateur
+  Future<bool> isCurrentUserAdmin() async {
+    final user = _supabase.auth.currentUser;
+    if (user == null) return false;
+
+    try {
+      final response = await _supabase
+          .from('users')
+          .select('is_admin, user_type')
+          .eq('id', user.id)
+          .maybeSingle();
+
+      if (response == null) {
+        // Fallback metadata si profil users absent temporairement
+        return (user.userMetadata?['user_type'] as String?) == 'admin';
+      }
+
+      final isAdminFlag = response['is_admin'] == true;
+      final isAdminType = (response['user_type']?.toString().toLowerCase() == 'admin');
+      return isAdminFlag || isAdminType;
+    } catch (e) {
+      print('AuthService: Erreur vérification admin: $e');
+      return false;
+    }
   }
 } 

@@ -1,7 +1,12 @@
+import '../config/supabase_config.dart';
+
 class AppConstants {
   // App Info
-  static const String appName = 'SKR Univers';
+  static const String appName = 'Business Place';
+  static const String appShortName = 'B-Place';
+  static const String appTagline = 'Votre marché local';
   static const String appVersion = '1.0.0';
+  static const String adminAppName = 'B-Place Admin';
   
   // User Types
   static const String userTypeCustomer = 'customer';
@@ -12,9 +17,13 @@ class AppConstants {
   static const String userTypeKey = 'user_type';
   static const String userIdKey = 'user_id';
   
-  // API Endpoints (à remplacer par vos vraies URLs Supabase)
-  static const String supabaseUrl = 'https://jsobtcjxsurmlersugvc.supabase.co';
-  static const String supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impzb2J0Y2p4c3VybWxlcnN1Z3ZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2NTEyMzgsImV4cCI6MjA3MDIyNzIzOH0.2Xb4tYt2rt2c7EgGV3agZjidS3-yh-Ryvm0VvnqEBRw';
+  // Supabase : utiliser SupabaseConfig.supabaseUrl et SupabaseConfig.supabaseAnonKey
+  // (défini dans lib/core/config/supabase_config.dart pour gérer ancien/nouveau projet)
+  static String get supabaseUrl => SupabaseConfig.supabaseUrl;
+  static String get supabaseAnonKey => SupabaseConfig.supabaseAnonKey;
+  
+  // Storage Buckets
+  static const String productImagesBucket = 'product-images';
   
   // Image Placeholders
   static const String productPlaceholder = 'https://via.placeholder.com/300x300?text=Produit';
@@ -28,4 +37,4 @@ class AppConstants {
   // Pagination
   static const int productsPerPage = 10;
   static const int ordersPerPage = 5;
-} 
+}

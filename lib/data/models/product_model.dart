@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'product_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Product {
   final String id;
   final String merchantId;
@@ -14,10 +14,23 @@ class Product {
   final List<String> images;
   final String category;
   final List<String> tags;
+  // Champs spécifiques Habitation
+  final String? propertyGoal; // vente/location
+  final String? propertyType; // maison, magasin, etc.
+  final String? propertyCity;
+  final String? propertyZone;
+  final String? propertyQuarter;
+  final int? propertyRooms;
+  final double? propertySurface;
   final bool isActive;
   final bool isFeatured;
   final DateTime createdAt;
   final DateTime updatedAt;
+  
+  // Coordonnées de localisation
+  final double? latitude;
+  final double? longitude;
+  final String? address;
   
   // Informations sur le vendeur
   final String merchantName;
@@ -35,10 +48,20 @@ class Product {
     required this.images,
     required this.category,
     required this.tags,
+    this.propertyGoal,
+    this.propertyType,
+    this.propertyCity,
+    this.propertyZone,
+    this.propertyQuarter,
+    this.propertyRooms,
+    this.propertySurface,
     required this.isActive,
     required this.isFeatured,
     required this.createdAt,
     required this.updatedAt,
+    this.latitude,
+    this.longitude,
+    this.address,
     required this.merchantName,
     this.merchantImage,
     required this.merchantVerified,
@@ -76,12 +99,22 @@ class Product {
     bool? isFeatured,
     DateTime? createdAt,
     DateTime? updatedAt,
+    double? latitude,
+    double? longitude,
+    String? address,
     String? merchantName,
     String? merchantImage,
     bool? merchantVerified,
   }) {
     return Product(
       id: id ?? this.id,
+      propertyGoal: propertyGoal ?? this.propertyGoal,
+      propertyType: propertyType ?? this.propertyType,
+      propertyCity: propertyCity ?? this.propertyCity,
+      propertyZone: propertyZone ?? this.propertyZone,
+      propertyQuarter: propertyQuarter ?? this.propertyQuarter,
+      propertyRooms: propertyRooms ?? this.propertyRooms,
+      propertySurface: propertySurface ?? this.propertySurface,
       merchantId: merchantId ?? this.merchantId,
       title: title ?? this.title,
       description: description ?? this.description,
@@ -95,6 +128,9 @@ class Product {
       isFeatured: isFeatured ?? this.isFeatured,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      address: address ?? this.address,
       merchantName: merchantName ?? this.merchantName,
       merchantImage: merchantImage ?? this.merchantImage,
       merchantVerified: merchantVerified ?? this.merchantVerified,

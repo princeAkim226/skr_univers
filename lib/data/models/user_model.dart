@@ -22,6 +22,7 @@ class User {
   final String? businessPhone;
   final String? businessEmail;
   final bool? isVerified;
+  final List<String> interests;
 
   User({
     required this.id,
@@ -40,6 +41,7 @@ class User {
     this.businessPhone,
     this.businessEmail,
     this.isVerified,
+    this.interests = const [],
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -71,6 +73,7 @@ class User {
     String? businessPhone,
     String? businessEmail,
     bool? isVerified,
+    List<String>? interests,
   }) {
     return User(
       id: id ?? this.id,
@@ -89,6 +92,7 @@ class User {
       businessPhone: businessPhone ?? this.businessPhone,
       businessEmail: businessEmail ?? this.businessEmail,
       isVerified: isVerified ?? this.isVerified,
+      interests: interests ?? this.interests,
     );
   }
 } 

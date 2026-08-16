@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/constants/app_constants.dart';
+import '../../../../core/widgets/raaga_logo.dart';
+import '../../../../data/services/auth_service.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -45,9 +46,28 @@ class _SplashPageState extends State<SplashPage>
     // Navigation automatique après 3 secondes
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        context.go('/user-type-selection');
+        _navigateToNextPage();
       }
     });
+  }
+
+  Future<void> _navigateToNextPage() async {
+    // Vérifier l'état de connexion
+    final authService = AuthService();
+    final isAuthenticated = authService.isAuthenticated;
+    final userType = authService.userType;
+
+    if (isAuthenticated) {
+      // Utilisateur connecté, rediriger selon le type
+      if (userType == 'merchant') {
+        context.go('/merchant');
+      } else {
+        context.go('/customer');
+      }
+    } else {
+      // Utilisateur non connecté, aller à la sélection de type
+      context.go('/user-type-selection');
+    }
   }
 
   @override
@@ -86,25 +106,11 @@ class _SplashPageState extends State<SplashPage>
                       builder: (context, child) {
                         return Transform.scale(
                           scale: _scaleAnimation.value,
-                          child: Container(
-                            width: 120,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(30),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 20,
-                                  offset: const Offset(0, 10),
-                                ),
-                              ],
-                            ),
-                            child: const Icon(
-                              Icons.shopping_bag,
-                              size: 60,
-                              color: AppTheme.primaryColor,
-                            ),
+                          child: const RaagaLogo(
+                            size: 150,
+                            showText: false,
+                            textColor: Colors.white,
+                            globeColor: Colors.white,
                           ),
                         );
                       },
@@ -118,22 +124,32 @@ class _SplashPageState extends State<SplashPage>
                           child: Column(
                             children: [
                               Text(
-                                AppConstants.appName,
-                                style: const TextStyle(
+                                'B-Place',
+                                style: TextStyle(
                                   fontSize: 32,
-                                  fontWeight: FontWeight.bold,
                                   color: Colors.white,
-                                  letterSpacing: 1.2,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 2,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      offset: const Offset(0, 2),
+                                      blurRadius: 4,
+                                    ),
+                                  ],
                                 ),
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Votre univers e-commerce',
+                                'vendez partout en un clic, où que vous soyez ! ! !',
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.white.withOpacity(0.9),
                                   fontWeight: FontWeight.w300,
                                 ),
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),

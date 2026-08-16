@@ -23,6 +23,9 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
   businessPhone: json['businessPhone'] as String?,
   businessEmail: json['businessEmail'] as String?,
   isVerified: json['isVerified'] as bool?,
+  interests:
+      (json['interests'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const [],
 );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -42,4 +45,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
   'businessPhone': instance.businessPhone,
   'businessEmail': instance.businessEmail,
   'isVerified': instance.isVerified,
+  'interests': instance.interests,
 };
