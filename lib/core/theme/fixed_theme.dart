@@ -35,7 +35,7 @@ class FixedTheme {
       ),
       
       // Cards
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: Colors.white,
         elevation: 2,
         shape: RoundedRectangleBorder(

@@ -39,10 +39,10 @@ if [ "$TARGET" = "admin" ]; then
   cp web_admin/index.html web/index.html
   cp web_admin/manifest.json web/manifest.json
   trap restore_web_shell EXIT
-  flutter build web -t lib/admin_main.dart --release --output "$PUBLISH_DIR"
+  flutter build web -t lib/admin_main.dart --release --no-wasm-dry-run --output "$PUBLISH_DIR"
 else
   echo "Build app web (copie mobile)..."
-  flutter build web -t lib/main.dart --release --output "$PUBLISH_DIR"
+  flutter build web -t lib/main.dart --release --no-wasm-dry-run --output "$PUBLISH_DIR"
 fi
 
 echo "OK → $PUBLISH_DIR"
