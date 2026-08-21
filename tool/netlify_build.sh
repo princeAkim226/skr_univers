@@ -54,6 +54,16 @@ if [ "$TARGET" = "admin" ]; then
 else
   echo "Build app web (copie mobile)..."
   flutter build web -t lib/main.dart --release --no-wasm-dry-run --output "$PUBLISH_DIR"
+
+  echo "Ajout page + APK sur le site app (/apk)..."
+  mkdir -p "$PUBLISH_DIR/apk"
+  cp apk_site/index.html "$PUBLISH_DIR/apk/index.html"
+  if [ -f apk_site/business-place-release.apk ]; then
+    cp apk_site/business-place-release.apk "$PUBLISH_DIR/apk/business-place-release.apk"
+    echo "APK inclus ($(du -h apk_site/business-place-release.apk | cut -f1))"
+  else
+    echo "ATTENTION: apk_site/business-place-release.apk introuvable"
+  fi
 fi
 
 echo "OK → $PUBLISH_DIR"

@@ -3,6 +3,7 @@
 # du tableau de bord et reconstruit toujours l'app.
 #
 # Site APP   : aucun réglage (défaut = app)
+#              + page APK sur /apk/
 # Site ADMIN : Environment variables → SITE_TARGET = admin
 #              puis Deploys → Trigger deploy → Deploy site
 
@@ -12,6 +13,19 @@
 
 [build.environment]
   FLUTTER_GIT_URL = "https://github.com/flutter/flutter.git"
+
+# Fichiers APK / page download : ne pas renvoyer vers le SPA Flutter
+[[redirects]]
+  from = "/apk"
+  to = "/apk/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/apk/"
+  to = "/apk/index.html"
+  status = 200
+  force = true
 
 [[redirects]]
   from = "/*"
