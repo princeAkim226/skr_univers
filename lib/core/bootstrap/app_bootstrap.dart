@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../config/supabase_config.dart';
 import '../config/url_strategy.dart'
     if (dart.library.html) '../config/url_strategy_web.dart';
+import '../error_handling/error_boundary.dart';
 import '../error_handling/global_error_handler.dart';
 import '../utils/app_logger.dart';
 import '../../data/services/notification_service.dart';
@@ -13,32 +14,8 @@ Future<void> bootstrapApp({
 }) async {
   debugInvertOversizedImages = false;
 
-  ErrorWidget.builder = (FlutterErrorDetails details) {
-    return Material(
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, color: Colors.red, size: 50),
-            const SizedBox(height: 20),
-            Text(
-              'Une erreur est survenue',
-              style: ThemeData().textTheme.titleLarge?.copyWith(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              'Veuillez relancer l’application',
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  };
+  // Remplace uniquement le widget cassé, pas toute l’app.
+  ErrorWidget.builder = buildFriendlyErrorWidget;
 
   WidgetsFlutterBinding.ensureInitialized();
   configureUrlStrategy();
@@ -74,7 +51,7 @@ Future<void> bootstrapApp({
                   const Icon(Icons.error_outline, color: Colors.red, size: 50),
                   const SizedBox(height: 20),
                   Text(
-                    'Erreur de démarrage',
+                    'Impossible de démarrer',
                     style: ThemeData().textTheme.titleLarge?.copyWith(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
@@ -83,7 +60,7 @@ Future<void> bootstrapApp({
                   ),
                   const SizedBox(height: 10),
                   const Text(
-                    'Impossible de démarrer. Réessayez plus tard.',
+                    'Réessayez dans quelques instants.',
                     textAlign: TextAlign.center,
                   ),
                 ],

@@ -198,19 +198,40 @@ class _MerchantMessagingPageState extends State<MerchantMessagingPage> {
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           child: ListTile(
-            leading: CircleAvatar(
-              backgroundImage: profileImage != null && profileImage.toString().isNotEmpty
-                  ? NetworkImage(profileImage.toString())
-                  : null,
-              child: profileImage == null || profileImage.toString().isEmpty
-                  ? Text(
-                      customerInitial,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+            leading: ClipOval(
+              child: profileImage != null && profileImage.toString().isNotEmpty
+                  ? Image.network(
+                      profileImage.toString(),
+                      width: 40,
+                      height: 40,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        width: 40,
+                        height: 40,
+                        color: AppTheme.primaryColor,
+                        alignment: Alignment.center,
+                        child: Text(
+                          customerInitial,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     )
-                  : null,
+                  : Container(
+                      width: 40,
+                      height: 40,
+                      color: AppTheme.primaryColor,
+                      alignment: Alignment.center,
+                      child: Text(
+                        customerInitial,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
             ),
             title: Text(
               customerName.isEmpty ? 'Client' : customerName,

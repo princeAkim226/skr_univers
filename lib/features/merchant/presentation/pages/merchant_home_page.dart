@@ -353,10 +353,19 @@ class _DashboardTabState extends State<_DashboardTab>
               if (_businessImage != null && _businessImage!.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(right: 12),
-                  child: CircleAvatar(
-                    radius: 22,
-                    backgroundImage: NetworkImage(_businessImage!),
-                    backgroundColor: Colors.white24,
+                  child: ClipOval(
+                    child: Image.network(
+                      _businessImage!,
+                      width: 44,
+                      height: 44,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        width: 44,
+                        height: 44,
+                        color: Colors.white24,
+                        child: const Icon(Icons.store, color: Colors.white70, size: 22),
+                      ),
+                    ),
                   ),
                 ),
               Expanded(

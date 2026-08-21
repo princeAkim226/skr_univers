@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui';
+import 'error_boundary.dart';
 import 'error_handler.dart';
 import '../theme/app_theme.dart';
 
@@ -12,18 +13,14 @@ class GlobalErrorHandler {
 
   /// Initialise le gestionnaire d'erreurs global
   static void initialize() {
-    // Capturer les erreurs Flutter non gérées (en chaînant l'ancien handler)
     final previousOnError = FlutterError.onError;
     FlutterError.onError = (FlutterErrorDetails details) {
-      // Toujours laisser le handler précédent faire son travail
       previousOnError?.call(details);
 
-      final lower = details.exception.toString().toLowerCase();
-      // Bug connu sur Flutter Web debug: mouse_tracker !_debugDuringDeviceUpdate
-      if (lower.contains('_debugduringdeviceupdate')) {
+      if (isNonFatalFlutterError(details.exception)) {
         ErrorHandler.logError(
           details.exception,
-          context: 'IgnoredMouseTrackerAssertion(Global)',
+          context: 'IgnoredNonFatalFlutterError',
           stackTrace: details.stack,
         );
         return;
@@ -34,17 +31,13 @@ class GlobalErrorHandler {
         context: 'FlutterError',
         stackTrace: details.stack,
       );
-
-      _showGlobalError(details, details.exception);
     };
 
-    // Capturer les erreurs de la plateforme
     PlatformDispatcher.instance.onError = (error, stack) {
-      final lower = error.toString().toLowerCase();
-      if (lower.contains('_debugduringdeviceupdate')) {
+      if (isNonFatalFlutterError(error)) {
         ErrorHandler.logError(
           error,
-          context: 'IgnoredMouseTrackerAssertion(Platform)',
+          context: 'IgnoredNonFatalPlatformError',
           stackTrace: stack,
         );
         return true;
@@ -56,13 +49,6 @@ class GlobalErrorHandler {
       );
       return true;
     };
-  }
-
-  /// Affiche une erreur globale dans l'interface
-  static void _showGlobalError(FlutterErrorDetails details, dynamic error) {
-    // Pour les erreurs globales, on ne peut pas afficher d'UI directement
-    // On log juste l'erreur
-    ErrorHandler.logError(error, context: 'GlobalError');
   }
 
   /// Affiche une erreur de connexion réseau
