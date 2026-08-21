@@ -378,7 +378,7 @@ class _HomeTabState extends State<_HomeTab> {
                     ),
                     const SizedBox(height: 14),
                     SizedBox(
-                      height: 118,
+                      height: 132,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: categories.length,
@@ -387,6 +387,7 @@ class _HomeTabState extends State<_HomeTab> {
                           return _buildCategoryCard(
                             category.name,
                             category.imageAsset,
+                            index,
                           );
                         },
                       ),
@@ -477,59 +478,79 @@ class _HomeTabState extends State<_HomeTab> {
     );
   }
 
-  Widget _buildCategoryCard(String title, String imageAsset) {
+  static const _categoryAccents = <Color>[
+    Color(0xFFE07A5F), // coral
+    Color(0xFF3D8B7A), // teal
+    Color(0xFFD4A017), // mustard
+    Color(0xFF6B8F71), // olive
+    Color(0xFFC97B84), // rose
+    Color(0xFF5B7C99), // soft blue
+  ];
+
+  Widget _buildCategoryCard(String title, String imageAsset, int index) {
+    final accent = _categoryAccents[index % _categoryAccents.length];
     return GestureDetector(
       onTap: () => _openCategory(title),
       child: Container(
-        width: 96,
+        width: 104,
         margin: const EdgeInsets.only(right: 12),
-        padding: const EdgeInsets.fromLTRB(8, 8, 8, 10),
         decoration: BoxDecoration(
-          color: const Color(0xFFF7F1E6),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: const Color(0xFFC9B896), width: 1.2),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white,
+              accent.withValues(alpha: 0.12),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: accent.withValues(alpha: 0.35), width: 1.4),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: accent.withValues(alpha: 0.18),
+              blurRadius: 14,
+              offset: const Offset(0, 6),
             ),
           ],
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                imageAsset,
-                width: 52,
-                height: 52,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  width: 52,
-                  height: 52,
-                  color: AppTheme.primaryColor.withValues(alpha: 0.12),
-                  child: Icon(
-                    _getCategoryIcon(title),
-                    color: AppTheme.primaryColor,
-                    size: 24,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.asset(
+                    imageAsset,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      color: accent.withValues(alpha: 0.15),
+                      child: Icon(
+                        _getCategoryIcon(title),
+                        color: accent,
+                        size: 28,
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: const TextStyle(
-                color: Color(0xFF3D2E1E),
-                fontWeight: FontWeight.w700,
-                fontSize: 11,
-                height: 1.15,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 10),
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: const Color(0xFF2C241B),
+                  fontWeight: FontWeight.w800,
+                  fontSize: 11.5,
+                  height: 1.15,
+                  letterSpacing: -0.2,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
