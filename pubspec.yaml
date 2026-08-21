@@ -135,13 +135,16 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
 
-# Configuration pour générer les icônes de l'application
-# IMPORTANT: Créez d'abord assets/icons/app_icon.png (1024x1024) avec votre logo RAAGA
-# Puis exécutez: flutter pub run flutter_launcher_icons
+# Icônes launcher B-Place — dart run flutter_launcher_icons
 flutter_launcher_icons:
   android: true
   ios: true
+  web:
+    generate: true
+    image_path: "assets/icons/app_icon.png"
+    background_color: "#1B5E20"
+    theme_color: "#2E7D32"
   image_path: "assets/icons/app_icon.png"
-  # Pour Android, utilisez un fond vert avec le logo R blanc
-  adaptive_icon_background: "#4CAF50"
-  adaptive_icon_foreground: "assets/icons/app_icon.png"
+  adaptive_icon_background: "#2E7D32"
+  adaptive_icon_foreground: "assets/icons/app_icon_foreground.png"
+  remove_alpha_ios: true
