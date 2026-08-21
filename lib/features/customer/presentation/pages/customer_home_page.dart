@@ -378,7 +378,7 @@ class _HomeTabState extends State<_HomeTab> {
                     ),
                     const SizedBox(height: 14),
                     SizedBox(
-                      height: 108,
+                      height: 118,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: categories.length,
@@ -386,8 +386,7 @@ class _HomeTabState extends State<_HomeTab> {
                           final category = categories[index];
                           return _buildCategoryCard(
                             category.name,
-                            _getCategoryIcon(category.name),
-                            AppTheme.primaryColor,
+                            category.imageAsset,
                           );
                         },
                       ),
@@ -478,20 +477,20 @@ class _HomeTabState extends State<_HomeTab> {
     );
   }
 
-  Widget _buildCategoryCard(String title, IconData icon, Color color) {
+  Widget _buildCategoryCard(String title, String imageAsset) {
     return GestureDetector(
       onTap: () => _openCategory(title),
       child: Container(
-        width: 92,
+        width: 96,
         margin: const EdgeInsets.only(right: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 10),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color(0xFFE4EBE4)),
+          color: const Color(0xFFF7F1E6),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: const Color(0xFFC9B896), width: 1.2),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
+              color: Colors.black.withValues(alpha: 0.06),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -500,20 +499,30 @@ class _HomeTabState extends State<_HomeTab> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: AppTheme.primaryColor.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(14),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                imageAsset,
+                width: 52,
+                height: 52,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  width: 52,
+                  height: 52,
+                  color: AppTheme.primaryColor.withValues(alpha: 0.12),
+                  child: Icon(
+                    _getCategoryIcon(title),
+                    color: AppTheme.primaryColor,
+                    size: 24,
+                  ),
+                ),
               ),
-              child: Icon(icon, color: AppTheme.primaryColor, size: 24),
             ),
             const SizedBox(height: 8),
             Text(
               title,
               style: const TextStyle(
-                color: AppTheme.textPrimaryColor,
+                color: Color(0xFF3D2E1E),
                 fontWeight: FontWeight.w700,
                 fontSize: 11,
                 height: 1.15,

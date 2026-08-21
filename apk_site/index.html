@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#1B5E20" />
+  <title>Business Place — APK</title>
+  <style>
+    :root {
+      --green: #1B5E20;
+      --green-mid: #2E7D32;
+      --cream: #F7F1E6;
+      --ink: #1F2937;
+      --muted: #5B6470;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255,255,255,0.12), transparent 35%),
+        radial-gradient(circle at 88% 78%, rgba(255,255,255,0.08), transparent 40%),
+        linear-gradient(145deg, #1B5E20 0%, #2E7D32 48%, #43A047 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      width: min(440px, 100%);
+      background: var(--cream);
+      border: 1.5px solid #C9B896;
+      border-radius: 24px;
+      padding: 36px 28px 28px;
+      text-align: center;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.22);
+    }
+    .badge {
+      display: inline-block;
+      font-family: system-ui, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.4px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 14px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.05;
+      letter-spacing: 0.5px;
+      color: var(--green);
+    }
+    p {
+      margin: 0 0 28px;
+      font-family: system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+    .meta {
+      font-family: system-ui, sans-serif;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+    a.download {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 20px;
+      border-radius: 14px;
+      background: var(--green-mid);
+      color: #fff;
+      text-decoration: none;
+      font-family: system-ui, sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      box-shadow: 0 10px 20px rgba(27, 94, 32, 0.28);
+    }
+    a.download:hover { background: var(--green); }
+    .note {
+      margin-top: 18px;
+      font-family: system-ui, sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="badge">B-Place</div>
+    <h1>Business Place</h1>
+    <p>Téléchargez l’application Android (clients &amp; e-commerçants).</p>
+    <div class="meta">APK release · Android</div>
+    <a class="download" href="./business-place-release.apk" download>
+      Télécharger l’APK
+    </a>
+    <p class="note">
+      Sur Android : autorisez l’installation depuis des sources inconnues si demandé.
+    </p>
+  </main>
+</body>
+</html>

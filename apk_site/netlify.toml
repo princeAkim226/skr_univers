@@ -1,0 +1,6 @@
+# Site de téléchargement APK (B-Place)
+# Sur Netlify : Base directory = apk_site
+
+[build]
+  publish = "."
+  command = "echo APK site ready"
