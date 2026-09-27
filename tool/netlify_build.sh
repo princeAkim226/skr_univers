@@ -55,6 +55,11 @@ else
   echo "Build app web (copie mobile)..."
   flutter build web -t lib/main.dart --release --no-wasm-dry-run --output "$PUBLISH_DIR"
 
+  if [ -f web/privacy.html ]; then
+    cp web/privacy.html "$PUBLISH_DIR/privacy.html"
+    echo "Politique de confidentialité incluse (/privacy.html)"
+  fi
+
   echo "Ajout page + APK sur le site app (/apk)..."
   mkdir -p "$PUBLISH_DIR/apk"
   cp apk_site/index.html "$PUBLISH_DIR/apk/index.html"
